@@ -1,3 +1,5 @@
+const { join } = require('path');
+
 module.exports = {
   /*
   ** Headers of the page
@@ -10,9 +12,14 @@ module.exports = {
       { hid: 'description', name: 'description', content: 'Nuxt.js project' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto' },
+      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/icon?family=Material+Icons' }
     ]
   },
+  css: [
+    { src: join(__dirname, 'assets/css/app.styl'), lang: 'styl' }
+  ],
   /*
   ** Customize the progress-bar color
   */
@@ -21,18 +28,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    /*
-    ** Run ESLINT on save
-    */
-    extend (config, ctx) {
-      if (ctx.isClient) {
-        config.module.rules.push({
-          enforce: 'pre',
-          test: /\.(js|vue)$/,
-          loader: 'eslint-loader',
-          exclude: /(node_modules)/
-        })
-      }
-    }
-  }
+    vendor: ['vuetify']
+  },
+  plugins: ['~plugins/vuetify.js'],
 }

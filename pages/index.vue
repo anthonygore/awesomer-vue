@@ -1,59 +1,45 @@
 <template>
-  <section class="container">
-    <div>
-      <logo/>
-      <h1 class="title">
-        NUXT
-      </h1>
-      <h2 class="subtitle">
-        Universal Vue.js Application
-      </h2>
-      <div class="links">
-        <a href="https://nuxtjs.org/" target="_blank" class="button--green">Documentation</a>
-        <a href="https://github.com/nuxt/nuxt.js" target="_blank" class="button--grey">Github</a>
-      </div>
-    </div>
-  </section>
+  <v-app top-toolbar left-fixed-sidebar>
+    <v-toolbar>
+      <v-toolbar-side-icon @click.native.stop="sidebar = !sidebar" />
+      <v-toolbar-logo>Toolbar</v-toolbar-logo>
+    </v-toolbar>
+    <main>
+      <v-sidebar left fixed drawer v-model="sidebar">
+        <v-list>
+          <v-list-item v-for="i in 3" :key="i">
+            <v-list-tile>
+              <v-list-tile-title>Item {{ i }}</v-list-tile-title>
+            </v-list-tile>
+          </v-list-item>
+        </v-list>
+      </v-sidebar>
+      <v-content>
+        <v-container fluid>
+          <div class="title">
+            <h2>Main content</h2>
+            <v-btn primary>Primary button</v-btn>
+            <v-btn secondary>Secondary button</v-btn>
+            <v-btn success>Success button</v-btn>
+          </div>
+        </v-container>
+      </v-content>
+    </main>
+  </v-app>
 </template>
 
 <script>
-import Logo from '~components/Logo.vue'
-
-export default {
-  components: {
-    Logo
+  export default {
+    asyncData() {
+      return {
+        sidebar: false
+      }
+    }
   }
-}
 </script>
 
-<style>
-.container
-{
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-.title
-{
-  font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* 1 */
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-.subtitle
-{
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-.links
-{
-  padding-top: 15px;
-}
+<style scoped>
+  .title {
+    padding-left: 20px;
+  }
 </style>
