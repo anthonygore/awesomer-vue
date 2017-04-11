@@ -1,13 +1,13 @@
 <template>
-  <v-app top-toolbar left-fixed-sidebar>
-    <v-toolbar>
-      <v-toolbar-side-icon @click.native.stop="sidebar = !sidebar" />
-      <v-toolbar-logo>Toolbar</v-toolbar-logo>
+  <v-app id="example-4" left-fixed-sidebar sidebar-under-toolbar top-toolbar>
+    <v-toolbar fixed>
+      <v-toolbar-side-icon @click.native.stop="nav4 = !nav4" class="hidden-sm-and-up"/>
+      <v-toolbar-title>Toolbar</v-toolbar-title>
     </v-toolbar>
     <main>
-      <v-sidebar left fixed drawer v-model="sidebar">
+      <v-sidebar v-model="sidebar" class="mt-0 scroll-y" :mobileBreakPoint="576" fixed>
         <v-list>
-          <v-list-item v-for="i in 3" :key="i">
+          <v-list-item v-for="i in 8" :key="i">
             <v-list-tile>
               <v-list-tile-title>Item {{ i }}</v-list-tile-title>
             </v-list-tile>
@@ -16,12 +16,7 @@
       </v-sidebar>
       <v-content>
         <v-container fluid>
-          <div class="title">
-            <h2>Main content</h2>
-            <v-btn primary>Primary button</v-btn>
-            <v-btn secondary>Secondary button</v-btn>
-            <v-btn success>Success button</v-btn>
-          </div>
+          <div class="title">Main Content</div>
         </v-container>
       </v-content>
     </main>
@@ -30,6 +25,11 @@
 
 <script>
   export default {
+    data() {
+      return {
+        sidebar: true
+      }
+    },
     asyncData() {
       return {
         sidebar: false
