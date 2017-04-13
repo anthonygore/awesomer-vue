@@ -23,41 +23,68 @@ const regexp = /\[.*\]\(http.*\)/g;
 const file = fs.readFileSync('./README.md', 'utf8');
 const lines = file.slice(file.indexOf('# Resources')).split('\n');
 
-module.exports.data = [];
+let data = [];
+
+function hrefTransform(cat) {
+  return cat.replace(/\W/g, '_').replace(/_+/g,"_").toLowerCase();
+}
 
 lines.forEach((line, number) => {
   if (regexp.exec(line)) {
     let link = (line.match(regexp)[0] || '').split(')')[0] + ')';
     let title = (link.match(/\[.*\]/) || ['[]'])[0].slice(1, -1);
     let url = (link.match(/\(http.*\)/) || ['()'])[0].slice(1, -1);
-
-    module.exports.data.push(
+    let categories = getCategories(number);
+    let href = categories.map(cat => hrefTransform(cat)).join('/');
+    data.push(
       {
-        categories: getCategories(number),
+        categories,
         title,
         url,
-        description: line.split(') - ')[1] || null
+        description: line.split(') - ')[1] || null,
+        href
       }
     );
   }
 });
 
-function createCat(data, cats) {
-  if (cats.length) {
-    let cat = cats.shift();
-    let d = data.find(d => d.title === cat);
-    if (!d) {
-      let obj = { title: cat, items: [] };
-      data.push(obj);
-      d = obj;
-    }
-    createCat(d.items, cats);
+function createCat(data, cats, depth) {
+
+  let cat = cats[depth];
+  depth++;
+  let d = data.find(d => d.title === cat);
+  if (!d) {
+    let obj = { title: cat, items: [] };
+    obj.href = '/' + cats.slice(0, depth).map(cat => hrefTransform(cat)).join('/');
+    data.push(obj);
+    d = obj;
+  }
+  if (depth < cats.length - 1) {
+    createCat(d.items, cats, depth);
   }
 }
 
-module.exports.categories = [];
+let categories = [];
 
-module.exports.data.forEach(item => { createCat(module.exports.categories, item.categories.slice(0)); });
+data.forEach(item => { createCat(categories, item.categories, 0); });
 
+let routes = [];
 
-//fs.writeFile('./sample.json', JSON.stringify(module.exports.data));
+data.forEach(item => {
+  let paths = [];
+  item.categories.forEach((cat, i) => {
+    let str = '';
+    if (i > 0) {
+      str = paths[i - 1];
+    }
+    paths[i] = str + '/' + hrefTransform(cat);
+    if (!routes.find(route => route.path === paths[i])) {
+      routes.push({ path: paths[i] });
+    }
+  });
+});
+
+fs.writeFileSync('./assets/json/data.json', JSON.stringify(data));
+fs.writeFileSync('./assets/json/categories.json', JSON.stringify(categories));
+fs.writeFileSync('./routes.json', JSON.stringify(routes));
+

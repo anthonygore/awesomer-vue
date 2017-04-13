@@ -12,4 +12,6 @@ dist
 
 .idea
 
+assets/json/
 sample.json
+routes.json

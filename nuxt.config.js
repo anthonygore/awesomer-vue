@@ -1,4 +1,5 @@
 const { join } = require('path');
+const fs = require('fs');
 
 module.exports = {
   /*
@@ -30,5 +31,16 @@ module.exports = {
   build: {
     vendor: ['vuetify']
   },
-  plugins: ['~plugins/vuetify.js'],
-}
+  plugins: [
+    '~plugins/vuetify.js', { src: '~plugins/recursive-list-group.js', ssr: true }
+  ],
+  router: {
+    extendRoutes (routes, resolve) {
+      let ext = fs.readFileSync(resolve(__dirname, 'routes.json'), 'utf8');
+      JSON.parse(ext).forEach(route => {
+        route.component = resolve(__dirname, 'pages/index.vue');
+        routes.push(route);
+      });
+    }
+  }
+};
