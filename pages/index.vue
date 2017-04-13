@@ -45,4 +45,7 @@
   .title {
     padding-left: 20px;
   }
+  .content {
+    margin: 75px 0 0 310px;
+  }
 </style>
