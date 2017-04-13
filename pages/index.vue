@@ -2,7 +2,10 @@
   <v-app sidebar-under-toolbar sidebar="left-fixed">
     <v-toolbar fixed>
       <v-toolbar-side-icon @click.native.stop="sidebar = !sidebar" class="hidden-sm-and-up"/>
-      <v-toolbar-title>Awesome(r) Vue</v-toolbar-title>
+      <v-toolbar-title>
+        <img src="~static/logo.png" class="pr-3">
+        <div>Awesome(r) Vue</div>
+      </v-toolbar-title>
     </v-toolbar>
     <main>
       <v-sidebar v-model="sidebar" :mobileBreakPoint="576" fixed>
@@ -45,6 +48,21 @@
   .title {
     padding-left: 20px;
   }
+
+  .toolbar__title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .toolbar__title > img {
+    height: 40px;
+  }
+
+  .toolbar__title > div {
+
+  }
+
   .content {
     margin: 75px 0 0 310px;
   }
