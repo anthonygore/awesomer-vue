@@ -1,50 +1,76 @@
 <template>
-  <v-card>
-    <v-card-row class="green darken-1">
-      <v-card-title>
-        <span class="white--text">{{ title }}</span>
+  <v-card horizontal v-on:click="open" height="125px" class="item mb-4" hover>
+    <v-card-row :img="img" height="125px"></v-card-row>
+    <v-card-column class="teal white--text">
+      <v-card-row>
         <v-spacer></v-spacer>
-        <div>
-          <v-menu id="marriot" bottom left origin="top right">
-            <v-btn icon="icon" slot="activator" class="white--text">
-              <v-icon>more_vert</v-icon>
-            </v-btn>
-            <v-list>
-              <v-list-item>
-                <v-list-tile>
-                  <v-list-tile-title>Never show rewards</v-list-tile-title>
-                </v-list-tile>
-              </v-list-item>
-              <v-list-item>
-                <v-list-tile>
-                  <v-list-tile-title>Remove Card</v-list-tile-title>
-                </v-list-tile>
-              </v-list-item>
-              <v-list-item>
-                <v-list-tile>
-                  <v-list-tile-title>Send Feedback</v-list-tile-title>
-                </v-list-tile>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </div>
-      </v-card-title>
-    </v-card-row>
-    <v-card-text>
-      <v-card-row height="75px">
-        <v-icon class="mr-5">card_membership</v-icon>
-        <div>
-          <div>Membership Number</div><strong>113241423</strong>
-        </div>
+        <v-card-text>
+          <h6>{{ title }}<span v-if="stars" class="stars pl-2">({{ stars }})</span></h6>
+          <div class="description text-xs">{{ description }}</div>
+          <div class="url text-xs">{{ url }}</div>
+        </v-card-text>
       </v-card-row>
-    </v-card-text>
-    <v-card-row actions>
-      <v-btn flat class="green--text darken-1">View Email</v-btn>
-    </v-card-row>
+    </v-card-column>
   </v-card>
 </template>
 <script>
+  import axios from 'axios';
+
   export default {
-    props: [ 'title' ]
+    props: [ 'title', 'description', 'url' ],
+    data() {
+      return {
+        stars: null,
+        img: null
+      };
+    },
+    methods: {
+      open() {
+        window.open(this.url);
+      },
+      getLocation(url) {
+        var l = document.createElement("a");
+        l.href = url;
+        return l;
+      }
+    },
+    mounted() {
+      let url = this.getLocation(this.url);
+      if (url.hostname === 'github.com') {
+        axios.get('https://api.github.com/repos' + url.pathname + '').then((response) => {
+          if (response.status === 200) {
+            console.log(response.data);
+            this.img = response.data.owner.avatar_url + '&amp;s=150';
+            this.stars = response.data.stargazers_count;
+          }
+        });
+      }
+    }
   }
 </script>
+<style>
+  .item {
+    cursor: pointer;
+  }
+  .item > div:first-child {
+    flex-shrink: 0;
+  }
+
+  .item > div:last-child {
+    min-width: 0;
+  }
+
+  .item .description {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .item .url {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .item .stars {
+    display: inline-block;
+  }
+</style>

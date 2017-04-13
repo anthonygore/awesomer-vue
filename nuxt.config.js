@@ -29,7 +29,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    vendor: ['vuetify']
+    vendor: ['vuetify', 'axios']
   },
   plugins: [
     '~plugins/vuetify.js', { src: '~plugins/recursive-list-group.js', ssr: true }

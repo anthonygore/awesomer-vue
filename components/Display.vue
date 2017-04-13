@@ -1,15 +1,24 @@
 <template>
   <div>
     <div class="row">
-      <div class="col sm6">
-        <Item v-for="(item, index) in leftCol" :key="index" :title="item.title" ></Item>
-      </div>
-      <div class="col sm6">
-        <Item v-for="(item, index) in rightCol" :key="index" :title="item.title"></Item>
+      <div>
+        <v-breadcrumbs divider="/">
+          <v-breadcrumbs-item v-for="item in breadcrumbs" :key="item" :href="item.href" target="_self">
+            {{ item.text }}
+          </v-breadcrumbs-item>
+        </v-breadcrumbs>
       </div>
     </div>
     <div class="row">
       <v-pagination v-bind:length.number="pages" v-model="page" />
+    </div>
+    <div class="row">
+      <div class="col sm6">
+        <Item v-for="item in leftCol" :key="item.url" :title="item.title" :description="item.description" :url="item.url"></Item>
+      </div>
+      <div class="col sm6">
+        <Item v-for="item in rightCol" :key="item.url" :title="item.title" :description="item.description" :url="item.url"></Item>
+      </div>
     </div>
   </div>
 </template>
@@ -28,6 +37,19 @@
       }
     },
     computed: {
+      breadcrumbs() {
+        return this.categories.map((item, index) => {
+          let href = '';
+          for (let i = index; i >= 0; i--) {
+            href = this.categories[i] + (href.length ? '/' + href : '');
+          }
+          href = '/' + href;
+          return {
+            text: item,
+            href
+          };
+        });
+      },
       pages() {
         return Math.ceil(this.filtered.length / PAGE_SIZE);
       },
