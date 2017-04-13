@@ -2,7 +2,7 @@
   <v-app sidebar-under-toolbar sidebar="left-fixed">
     <v-toolbar fixed>
       <v-toolbar-side-icon @click.native.stop="sidebar = !sidebar" class="hidden-sm-and-up"/>
-      <v-toolbar-title>Toolbar</v-toolbar-title>
+      <v-toolbar-title>Awesome(r) Vue</v-toolbar-title>
     </v-toolbar>
     <main>
       <v-sidebar v-model="sidebar" :mobileBreakPoint="576" fixed>

@@ -1,13 +1,12 @@
 <template>
   <v-card horizontal v-on:click="open" height="125px" class="item mb-4" hover>
-    <v-card-row :img="img" height="125px"></v-card-row>
-    <v-card-column class="teal white--text">
+    <v-card-column class="primary">
       <v-card-row>
         <v-spacer></v-spacer>
         <v-card-text>
-          <h6>{{ title }}<span v-if="stars" class="stars pl-2">({{ stars }})</span></h6>
-          <div class="description text-xs">{{ description }}</div>
-          <div class="url text-xs">{{ url }}</div>
+          <h6 class="title white--text">{{ title }}<span v-if="stars" class="stars pl-2 secondary--text">({{ stars }})</span></h6>
+          <div class="description text-xs accent--text">{{ description }}</div>
+          <div class="url text-xs secondary--text">{{ url }}</div>
         </v-card-text>
       </v-card-row>
     </v-card-column>
@@ -20,8 +19,7 @@
     props: [ 'title', 'description', 'url' ],
     data() {
       return {
-        stars: null,
-        img: null
+        stars: null
       };
     },
     methods: {
@@ -39,8 +37,6 @@
       if (url.hostname === 'github.com') {
         axios.get('https://api.github.com/repos' + url.pathname + '').then((response) => {
           if (response.status === 200) {
-            console.log(response.data);
-            this.img = response.data.owner.avatar_url + '&amp;s=150';
             this.stars = response.data.stargazers_count;
           }
         });
@@ -65,6 +61,12 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  .item .title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: bold;
+  }
   .item .url {
     white-space: nowrap;
     overflow: hidden;
@@ -72,5 +74,6 @@
   }
   .item .stars {
     display: inline-block;
+
   }
 </style>

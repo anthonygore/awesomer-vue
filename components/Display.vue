@@ -10,7 +10,23 @@
       </div>
     </div>
     <div class="row">
-      <v-pagination v-bind:length.number="pages" v-model="page" />
+      <v-col xs12 md6>
+        <v-pagination v-bind:length.number="pages" v-model="page" />
+      </v-col>
+      <v-col xs12 md6>
+        <ul class="sort">
+          <v-subheader>Sort</v-subheader>
+          <li>
+            <v-radio label="A - Z" primary v-model="sort" value="a2z" light />
+          </li>
+          <li>
+            <v-radio label="Z - A" primary v-model="sort" value="z2a" light />
+          </li>
+          <li>
+            <v-radio label="Stars" primary v-model="sort" value="stars"/>
+          </li>
+        </ul>
+      </v-col>
     </div>
     <div class="row">
       <div class="col sm6">
@@ -33,7 +49,8 @@
     data() {
       return {
         data,
-        page: 1
+        page: 1,
+        sort: 'a2z'
       }
     },
     computed: {
@@ -60,7 +77,21 @@
         return (this.page * PAGE_SIZE);
       },
       filtered() {
-        return data.filter(item => {
+        return data
+        .sort((a, b) => {
+          switch(this.sort) {
+            case 'a2z':
+              return a.title < b.title ? -1 : 1;
+              break;
+            case 'z2a':
+              return a.title < b.title ? 1 : -1;
+              break;
+            case 'stars':
+              return 1;
+              break;
+          }
+        })
+        .filter(item => {
           let match = true;
           item.href.split('/').forEach((category, index) => {
             if (this.categories[index] && category !== this.categories[index]) {
@@ -90,4 +121,13 @@
     }
   }
 </script>
+<style>
+  .sort {
+    list-style: none;
+    display: flex;
+  }
+  .sort li {
+    flex: 1 1 auto;
+  }
+</style>
 
