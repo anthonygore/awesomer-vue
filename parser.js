@@ -59,7 +59,7 @@ function createCat(data, cats, depth) {
     data.push(obj);
     d = obj;
   }
-  if (depth < cats.length - 1) {
+  if (depth < cats.length) {
     createCat(d.items, cats, depth);
   }
 }
